@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Landing page oficial dos 15 anos do Ministério Viver e Louvar." />
+  <title>15 Anos | Ministério Viver e Louvar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="ambient-shape shape-a" aria-hidden="true"></div>
+  <div class="ambient-shape shape-b" aria-hidden="true"></div>
+
+  <header class="hero">
+    <nav class="topbar">
+      <div class="brand">Ministério Viver e Louvar</div>
+      <a class="btn btn-ghost" href="#apoie">Apoie o Evento</a>
+    </nav>
+
+    <section class="hero-content">
+      <p class="kicker">Especial 15 anos</p>
+      <h1>Uma história de fé, música e transformação</h1>
+      <p class="subtitle">
+        Há 15 anos, carregamos o mesmo chamado: <strong>pregar a mensagem de Deus através do louvor</strong>.
+        No dia <strong>24 de outubro</strong>, vamos registrar essa história em uma gravação especial e queremos você conosco.
+      </p>
+
+      <figure class="hero-logo-wrap" aria-label="Logo oficial do Ministério Viver e Louvar">
+        <img
+          class="hero-logo"
+          src="assets/logo-viverelouvar.jpg"
+          alt="Logo do Ministério Viver e Louvar"
+        />
+      </figure>
+
+      <div class="countdown" id="countdown" aria-live="polite">
+        <div class="time-box">
+          <span id="days">00</span>
+          <small>dias</small>
+        </div>
+        <div class="time-box">
+          <span id="hours">00</span>
+          <small>horas</small>
+        </div>
+        <div class="time-box">
+          <span id="minutes">00</span>
+          <small>min</small>
+        </div>
+        <div class="time-box">
+          <span id="seconds">00</span>
+          <small>seg</small>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#apoie">Quero semear nesse sonho</a>
+        <a class="btn btn-secondary" href="#historia">Conhecer nossa história</a>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section id="historia" class="panel two-col reveal">
+      <div>
+        <h2>Nossa História</h2>
+        <p>
+          Tudo começou com um chamado no coração. Hoje, esse mesmo chamado pulsa em cada integrante do Ministério Viver e Louvar.
+          São 15 anos na estrada anunciando o Evangelho por meio das canções, com verdade, entrega e responsabilidade.
+        </p>
+        <p>
+          Sabemos que louvar não é apenas cantar: é contar uma história, compartilhar vivências e preparar o ambiente para que o Espírito Santo se mova.
+          Esta gravação celebra essa missão e aponta para as próximas gerações que continuarão levantando esse som de adoração.
+        </p>
+        <figure class="team-photo">
+          <img
+            src="assets/foto-equipe-viverelouvar.jpg"
+            alt="Equipe do Ministério Viver e Louvar reunida no palco"
+          />
+          <figcaption>Deus nos escolheu para sermos voz, melodia e testemunho do Seu amor.</figcaption>
+        </figure>
+      </div>
+      <aside class="highlight-card">
+        <h3>Nosso Chamado</h3>
+        <ul>
+          <li>Levar o louvor a cada igreja e a cada lugar</li>
+          <li>Conduzir corações a uma adoração sincera</li>
+          <li>Servir com unidade, excelência e temor</li>
+          <li>Manter acesa a missão por muitas gerações</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="objetivos" class="panel reveal">
+      <h2>Objetivos do Projeto 15 Anos</h2>
+      <div class="goals-grid">
+        <article>
+          <h3>Registrar o Legado</h3>
+          <p>Gravar ao vivo canções e testemunhos que expressem a fidelidade de Deus nesses 15 anos.</p>
+        </article>
+        <article>
+          <h3>Expandir o Alcance</h3>
+          <p>Levar essa mensagem para além das paredes da igreja, alcançando vidas em diferentes lugares.</p>
+        </article>
+        <article>
+          <h3>Formar Novas Gerações</h3>
+          <p>Capacitar músicos e ministros para que o louvor continue vivo com paixão e propósito.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="apoie" class="panel support reveal">
+      <div class="support-header">
+        <h2>Patrocínio e Crowdfunding</h2>
+        <p>
+          Nosso alvo é levantar os recursos para estrutura, captação, divulgação e ações de legado.
+          Cada contribuição aproxima esse sonho da realidade.
+        </p>
+      </div>
+
+      <div class="progress-wrap" role="status" aria-live="polite">
+        <div class="progress-meta">
+          <strong>Meta: R$ <span id="goalAmount">0</span></strong>
+          <span>Arrecadado: R$ <span id="raisedAmount">0</span></span>
+        </div>
+        <div class="progress-track" aria-label="Progresso da arrecadação">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <p class="progress-text" id="progressText">0% da meta alcançada</p>
+      </div>
+
+      <div class="actions-grid">
+        <a class="action-card" href="#" aria-label="Contribuir via plataforma de crowdfunding">
+          <h3>Contribuir Online</h3>
+          <p>Participe da campanha pública e compartilhe com amigos.</p>
+          <span>Ir para o crowdfunding</span>
+        </a>
+        <a class="action-card" href="#" aria-label="Solicitar proposta de patrocínio">
+          <h3>Seja Patrocinador</h3>
+          <p>Receba nosso mídia kit e propostas para empresas e parceiros.</p>
+          <span>Solicitar mídia kit</span>
+        </a>
+        <a class="action-card" href="#" aria-label="Doar por chave Pix">
+          <h3>Doar por Pix</h3>
+          <p>Doe de forma rápida e direta para apoiar a gravação.</p>
+          <span>Ver chave Pix</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Ministério Viver e Louvar • 15 anos de adoração</p>
+    <small>24/10 • Gravação especial ao vivo</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
