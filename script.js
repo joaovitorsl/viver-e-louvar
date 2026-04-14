@@ -6,7 +6,7 @@ const EVENT_DATE = new Date("2026-10-24T19:00:00-03:00");
 
 const FUNDING = {
   goal: 13000,
-  raised: 0,
+  raised: 1000,
 };
 
 const money = new Intl.NumberFormat("pt-BR");
