@@ -5,8 +5,8 @@
 const EVENT_DATE = new Date("2026-10-24T19:00:00-03:00");
 
 const FUNDING = {
-  goal: 120000,
-  raised: 68450,
+  goal: 13000,
+  raised: 0,
 };
 
 const money = new Intl.NumberFormat("pt-BR");
@@ -172,4 +172,193 @@ function initFunding() {
 updateCountdown();
 initFunding();
 setInterval(updateCountdown, 1000);
+
+/* ── 8. PIX QR CODE ─────────────────────────────────────── */
+(function initPix() {
+  const el = document.getElementById("pixQR");
+  if (!el || typeof QRCode === "undefined") return;
+
+  const PIX_KEY = "viverelouvar@gmail.com";
+
+  new QRCode(el, {
+    text: PIX_KEY,
+    width: 168,
+    height: 168,
+    colorDark: "#1a1410",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.M,
+  });
+
+  /* botão copiar */
+  const btn  = document.getElementById("pixCopy");
+  const txt  = document.getElementById("pixCopyText");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    navigator.clipboard.writeText(PIX_KEY).then(() => {
+      btn.classList.add("copied");
+      txt.textContent = "Copiado!";
+      setTimeout(() => { btn.classList.remove("copied"); txt.textContent = "Copiar"; }, 2200);
+    });
+  });
+})();
+
+/* ── 9. MAPA DE ASSENTOS ────────────────────────────────── */
+(function initSeatMap() {
+  const container = document.getElementById("mapaSeats");
+  const infoEl    = document.getElementById("mapaInfo");
+  const btn       = document.getElementById("mapaBtn");
+  if (!container) return;
+
+  /* ── configuração das fileiras ──────────────────────────
+     Paid (150 lugares): A–I
+     Gratuito (180 lugares): J–Q
+     Total: 330
+  ────────────────────────────────────────────────────── */
+  const ROWS = [
+    { id:"A", l:5,  r:5,  type:"honra"       },
+    { id:"B", l:6,  r:6,  type:"honra"       },
+    { id:"C", l:7,  r:7,  type:"incentivador"},
+    { id:"D", l:8,  r:8,  type:"incentivador"},
+    { id:"E", l:9,  r:9,  type:"incentivador"},
+    { id:"F", l:9,  r:9,  type:"apoiador"    },
+    { id:"G", l:10, r:10, type:"apoiador"    },
+    { id:"H", l:10, r:10, type:"apoiador"    },
+    { id:"I", l:11, r:11, type:"apoiador"    },
+    "divisor",
+    { id:"J", l:11, r:11, type:"gratuito"    },
+    { id:"K", l:11, r:11, type:"gratuito"    },
+    { id:"L", l:11, r:11, type:"gratuito"    },
+    { id:"M", l:11, r:11, type:"gratuito"    },
+    { id:"N", l:11, r:11, type:"gratuito"    },
+    { id:"O", l:12, r:12, type:"gratuito"    },
+    { id:"P", l:12, r:12, type:"gratuito"    },
+    { id:"Q", l:11, r:11, type:"gratuito"    },
+  ];
+
+  const PRECO  = { honra: null, incentivador: 50, apoiador: 20, gratuito: 0 };
+  const ROTULO = { honra: "Cadeira de Honra · Patrocinador", incentivador: "Incentivador · R$ 50",
+                   apoiador: "Apoiador · R$ 20", gratuito: "Gratuito" };
+
+  /* marcação aleatória de ocupados (realismo para a apresentação) */
+  const ocupados = new Set();
+  ROWS.forEach(row => {
+    if (row === "divisor") return;
+    const total = row.l + row.r;
+    const taxa  = row.type === "gratuito" ? 0.08 : 0.15;
+    for (let i = 0; i < total; i++) {
+      if (Math.random() < taxa) ocupados.add(`${row.id}-${i}`);
+    }
+  });
+
+  const selecionados = new Map(); // id → type
+
+  /* ── tooltip ──────────────────────────────────────────── */
+  const tip = document.createElement("div");
+  tip.className = "seat-tooltip";
+  document.body.appendChild(tip);
+
+  function showTip(e, text) {
+    tip.textContent = text;
+    tip.classList.add("visible");
+    moveTip(e);
+  }
+  function moveTip(e) {
+    tip.style.left = (e.clientX + 12) + "px";
+    tip.style.top  = (e.clientY - 28) + "px";
+  }
+  function hideTip() { tip.classList.remove("visible"); }
+
+  /* ── geração do mapa ──────────────────────────────────── */
+  ROWS.forEach(row => {
+    if (row === "divisor") {
+      const div = document.createElement("div");
+      div.className = "mapa-divisor";
+      div.innerHTML = `<div class="mapa-divisor-line"></div>
+        <span class="mapa-divisor-label">⬇ Acesso Gratuito</span>
+        <div class="mapa-divisor-line"></div>`;
+      container.appendChild(div);
+      return;
+    }
+
+    const rowEl = document.createElement("div");
+    rowEl.className = "seat-row";
+
+    const mkLbl = () => { const s = document.createElement("span"); s.className = "row-lbl"; s.textContent = row.id; return s; };
+    const mkAisle = () => { const d = document.createElement("div"); d.className = "seat-aisle"; return d; };
+
+    rowEl.appendChild(mkLbl());
+
+    /* assentos lado esquerdo (numerados de dentro para fora) */
+    for (let i = row.l; i >= 1; i--) {
+      rowEl.appendChild(makeSeat(row, `${row.id}-${row.l - i}`, i, "Esq"));
+    }
+
+    rowEl.appendChild(mkAisle());
+
+    /* assentos lado direito */
+    for (let i = 1; i <= row.r; i++) {
+      rowEl.appendChild(makeSeat(row, `${row.id}-${row.l + i - 1}`, i, "Dir"));
+    }
+
+    rowEl.appendChild(mkLbl());
+    container.appendChild(rowEl);
+  });
+
+  function makeSeat(row, uid, num, lado) {
+    const el = document.createElement("div");
+    el.className = `seat ${row.type}`;
+    el.dataset.uid  = uid;
+    el.dataset.type = row.type;
+
+    if (ocupados.has(uid)) {
+      el.classList.add("ocupado");
+      el.addEventListener("mouseenter", e => showTip(e, "Ocupado"));
+      el.addEventListener("mousemove",  moveTip);
+      el.addEventListener("mouseleave", hideTip);
+    } else {
+      const labelTip = `Fileira ${row.id} · ${lado} ${num} · ${ROTULO[row.type]}`;
+      el.addEventListener("mouseenter", e => showTip(e, labelTip));
+      el.addEventListener("mousemove",  moveTip);
+      el.addEventListener("mouseleave", hideTip);
+      el.addEventListener("click", () => toggleSeat(el, uid, row.type));
+    }
+    return el;
+  }
+
+  function toggleSeat(el, uid, type) {
+    if (selecionados.has(uid)) {
+      selecionados.delete(uid);
+      el.classList.remove("selected");
+    } else {
+      selecionados.set(uid, type);
+      el.classList.add("selected");
+    }
+    renderInfo();
+  }
+
+  function renderInfo() {
+    if (selecionados.size === 0) {
+      infoEl.textContent = "Selecione uma cadeira para começar.";
+      btn.style.display = "none";
+      return;
+    }
+
+    const counts = { honra:0, incentivador:0, apoiador:0, gratuito:0 };
+    let total = 0;
+    selecionados.forEach(type => {
+      counts[type]++;
+      if (PRECO[type]) total += PRECO[type];
+    });
+
+    const partes = [];
+    if (counts.honra)       partes.push(`${counts.honra}× Honra`);
+    if (counts.incentivador) partes.push(`${counts.incentivador}× Incentivador`);
+    if (counts.apoiador)    partes.push(`${counts.apoiador}× Apoiador`);
+    if (counts.gratuito)    partes.push(`${counts.gratuito}× Gratuito`);
+
+    const n = selecionados.size;
+    infoEl.textContent = `${n} cadeira${n > 1 ? "s" : ""} · ${partes.join(", ")}${total > 0 ? ` · Total: R$ ${total}` : " · Gratuito"}`;
+    btn.style.display = "inline-block";
+  }
+})();
 
